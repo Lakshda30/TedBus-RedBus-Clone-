@@ -1,0 +1,6 @@
+.settings-panel { max-width: 400px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+label { display: block; margin: 10px 0; }
+button { padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+button:disabled { background: #ccc; cursor: not-allowed; }
+.success { color: green; }
+.error { color: red; }

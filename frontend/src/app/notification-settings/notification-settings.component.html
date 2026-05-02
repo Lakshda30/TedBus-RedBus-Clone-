@@ -1,0 +1,39 @@
+<div class="notification-settings">
+  <h2>{{ 'notificationSettings.heading' | translate }}</h2>
+
+  <p *ngIf="loading">{{ 'notificationSettings.loading' | translate }}</p>
+
+  <div *ngIf="!loading" class="settings-form">
+    <label>
+      <input type="checkbox" [(ngModel)]="email" />
+      {{ 'notificationSettings.emailNotifications' | translate }}
+    </label>
+
+    <label>
+      <input type="checkbox" [(ngModel)]="push" />
+      {{ 'notificationSettings.pushNotifications' | translate }}
+    </label>
+    <p *ngIf="pushPermission !== 'granted'">
+      {{ getPushPermissionLabel() }}
+    </p>
+
+    <label>
+      <input type="checkbox" [(ngModel)]="promos" />
+      {{ 'notificationSettings.promotionalMessages' | translate }}
+    </label>
+
+    <label>
+      {{ 'notificationSettings.preferredLanguage' | translate }}
+      <select [(ngModel)]="language">
+        <option value="en">{{ 'common.english' | translate }}</option>
+        <option value="hi">{{ 'common.hindi' | translate }}</option>
+      </select>
+    </label>
+
+    <button type="button" (click)="save()" [disabled]="saving">
+      {{ saving ? ('common.saving' | translate) : ('notificationSettings.saveSettings' | translate) }}
+    </button>
+
+    <p *ngIf="message">{{ message }}</p>
+  </div>
+</div>

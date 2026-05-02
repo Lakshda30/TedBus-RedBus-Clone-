@@ -1,0 +1,34 @@
+.results-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.results-message {
+  padding: 20px 24px;
+  border-radius: 14px;
+  background: rgba(128, 128, 128, 0.05);
+  border: 1px solid rgba(128, 128, 128, 0.15);
+  color: #64748b;
+  font-size: 15px;
+  text-align: center;
+}
+
+.results-message--error {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.06);
+  border-color: rgba(220, 38, 38, 0.15);
+}
+
+/* ── DARK MODE ────────────────────────────────────────────── */
+.dark-mode .results-message {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.dark-mode .results-message--error {
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgba(220, 38, 38, 0.2);
+  color: #f87171;
+}

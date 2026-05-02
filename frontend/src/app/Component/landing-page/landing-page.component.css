@@ -1,0 +1,4 @@
+/* Landing page dark mode overrides are in global styles.css */
+/* This file is intentionally left empty — all dark mode fixes
+   for this page live in src/styles.css using app-landing-page
+   selectors to bypass Angular component encapsulation. */

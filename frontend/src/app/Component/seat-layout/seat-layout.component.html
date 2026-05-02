@@ -1,0 +1,74 @@
+<div class="p-6 max-w-6xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4 text-gray-800">{{ 'seatLayout.heading' | translate }}</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="md:col-span-2 bg-white p-5 rounded-xl shadow">
+      <div class="grid grid-cols-4 gap-4 justify-center">
+        <div
+          *ngFor="let seat of seats"
+          (click)="toggleSeat(seat)"
+          class="cursor-pointer text-center p-3 rounded-lg border transition duration-200"
+          [ngClass]="{
+            'bg-green-400 text-white': selectedSeats.includes(seat),
+            'bg-gray-300 cursor-not-allowed': bookedSeats.includes(seat),
+            'bg-white hover:bg-blue-100': !selectedSeats.includes(seat) && !bookedSeats.includes(seat)
+          }"
+        >
+          {{ seat }}
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-xl shadow">
+      <h3 class="text-xl font-semibold mb-4">{{ 'seatLayout.bookingSummary' | translate }}</h3>
+
+      <p class="mb-2">
+        <b>{{ 'common.seats' | translate }}:</b>
+        {{ selectedSeats.length ? selectedSeats.join(', ') : ('seatLayout.none' | translate) }}
+      </p>
+
+      <p class="mb-2">
+        <b>{{ 'seatLayout.totalSeats' | translate }}:</b> {{ selectedSeats.length }}
+      </p>
+
+      <p class="mb-4 text-lg font-bold text-green-600">
+        Rs {{ getTotalPrice() }}
+      </p>
+
+      <button
+        (click)="bookSeats()"
+        class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
+      >
+        {{ 'seatLayout.confirmBooking' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-8 bg-white p-6 rounded-xl shadow">
+    <h3 class="text-xl font-semibold mb-4">{{ 'seatLayout.reviewHeading' | translate }}</h3>
+    <p class="mb-4 text-sm text-gray-600">{{ 'seatLayout.reviewFromTrips' | translate }}</p>
+
+    <div class="mt-6">
+      <h3 class="font-semibold mb-2">{{ 'seatLayout.customerReviews' | translate }}</h3>
+      <p class="mb-3">{{ 'seatLayout.average' | translate }}: {{ averageRating | number:'1.1-1' }}</p>
+
+      <div *ngFor="let r of reviews" class="border p-3 rounded mb-2">
+        <p>{{ r.rating }}/5</p>
+        <p>{{ r.reviewText }}</p>
+        <p *ngIf="isTopReviewer(r)" class="text-xs font-semibold text-green-700">
+          {{ 'seatLayout.trustedReviewer' | translate }}
+        </p>
+
+        <div class="flex gap-3 mt-2">
+          <button (click)="likeReview(r)" class="text-green-600">
+            {{ r.helpfulVotes || 0 }}
+          </button>
+
+          <button (click)="reportReview(r)" class="text-red-500">
+            {{ 'seatLayout.report' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

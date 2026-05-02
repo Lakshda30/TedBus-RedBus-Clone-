@@ -1,0 +1,76 @@
+* { box-sizing: border-box; }
+
+/* ── SAFETY BANNER ─────────────────────────────────────────── */
+.security-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(22, 163, 74, 0.06);
+  border: 1px solid rgba(22, 163, 74, 0.15);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 600;
+}
+.security-container mat-icon { font-size: 18px; color: #16a34a; }
+
+/* ── SORT HEADER ROW ───────────────────────────────────────── */
+.main-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(128, 128, 128, 0.05);
+  border: 1px solid rgba(128, 128, 128, 0.12);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.main-container > div { cursor: pointer; transition: color 0.15s; }
+.main-container > div:hover { color: #ea580c; }
+
+.main-container1 {
+  width: 22%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.main-container1 > div:nth-child(1) {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.main-container1 > div:nth-child(2) { font-weight: 700; }
+
+.main-container2 { width: 12%; }
+.main-container3 { width: 10%; }
+.main-container4 { width: 12%; }
+.main-container5 { width: 10%; }
+.main-container6 { width: 14%; }
+.main-container7 { width: 12%; }
+
+/* ── DARK MODE ─────────────────────────────────────────────── */
+.dark-mode .security-container {
+  background: rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.2);
+  color: #4ade80;
+}
+.dark-mode .security-container mat-icon { color: #4ade80; }
+
+.dark-mode .main-container {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: #334155;
+  color: #64748b;
+}
+.dark-mode .main-container1 > div:nth-child(1) { color: #f1f5f9; }
+.dark-mode .main-container > div:hover { color: #f97316; }

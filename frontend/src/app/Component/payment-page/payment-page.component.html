@@ -1,0 +1,173 @@
+<div class="payment-shell">
+  <section class="payment-main-card">
+    <div class="payment-column payment-column--methods">
+      <div class="payment-header">
+        <div>
+          <p class="payment-eyebrow">{{ 'paymentPage.safeSecure' | translate }}</p>
+          <h1 class="payment-title">{{ 'paymentPage.completeBooking' | translate }}</h1>
+          <p class="payment-subtitle">{{ 'paymentPage.chooseMethodSubtitle' | translate }}</p>
+        </div>
+        <button class="payment-pay-button payment-pay-button--top" (click)="pay()" [disabled]="isLoading || !passseatarray.length">
+          {{ isLoading ? ('common.processing' | translate) : payButtonLabel }}
+        </button>
+      </div>
+
+      <div class="offer-row">
+        <input
+          class="payment__fullContainer_rightContainer_inputOfferCOde"
+          [placeholder]="'paymentPage.enterOfferCode' | translate"
+          [(ngModel)]="offerCode" />
+        <button class="payment-offer-button" type="button" (click)="applyOfferCode()">{{ 'paymentPage.applyOffer' | translate }}</button>
+      </div>
+
+      <div class="payment-selected-panel" *ngIf="paymentStatusMessage">
+        <div class="payment-selected-panel__header">{{ 'paymentPage.paymentStatus' | translate }}</div>
+        <div class="payment-selected-panel__body">
+          <div class="payment-selected-note">{{ paymentStatusMessage }}</div>
+        </div>
+      </div>
+
+      <div class="payment__fullContainer_rightContainer_infobar payment-banner-grid">
+        <div class="banner_chip">
+          <img src="https://s3.rdbuz.com/Images/webplatform/Common/Payment/safe-payments.svg" alt="CC" />
+          <div class="banner_text">
+            <div>{{ 'paymentPage.safeSecure' | translate }}</div>
+            <div>{{ 'paymentPage.onlinePayments' | translate }}</div>
+          </div>
+        </div>
+        <div class="banner_chip">
+          <img src="https://s3.rdbuz.com/Images/webplatform/Common/Payment/transactions.svg" alt="Million Transactions" />
+          <div class="banner_text">
+            <div>60+ million</div>
+            <div>{{ 'paymentPage.transactions' | translate }}</div>
+          </div>
+        </div>
+        <div class="banner_chip">
+          <img src="https://s3.rdbuz.com/Images/webplatform/Common/Payment/trust.svg" alt="Reliable" />
+          <div class="banner_text">
+            <div>{{ 'paymentPage.trustYears' | translate }}</div>
+            <div>{{ 'paymentPage.trust' | translate }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-method-grid">
+        <button class="method-card" [class.method-card--active]="selectedPaymentMethod === 'stripe'" [class.method-card--disabled]="!isMethodAvailable('stripe')" (click)="choosePaymentMethod('stripe')">
+          <div class="method-card__title">{{ 'paymentPage.payWithStripe' | translate }}</div>
+          <div class="method-card__subtitle">{{ 'paymentPage.methodRecommended' | translate }}</div>
+          <div class="method-card__hint" *ngIf="getMethodAvailabilityNote('stripe')">{{ getMethodAvailabilityNote('stripe') }}</div>
+        </button>
+        <button class="method-card" [class.method-card--active]="selectedPaymentMethod === 'card'" [class.method-card--disabled]="!isMethodAvailable('card')" (click)="choosePaymentMethod('card')">
+          <div class="method-card__title">{{ 'paymentPage.creditCard' | translate }}</div>
+          <div class="method-card__subtitle">{{ 'paymentPage.methodCardSubtitle' | translate }}</div>
+          <div class="method-card__hint" *ngIf="getMethodAvailabilityNote('card')">{{ getMethodAvailabilityNote('card') }}</div>
+        </button>
+        <button class="method-card" [class.method-card--active]="selectedPaymentMethod === 'debit'" [class.method-card--disabled]="!isMethodAvailable('debit')" (click)="choosePaymentMethod('debit')">
+          <div class="method-card__title">{{ 'paymentPage.debitCard' | translate }}</div>
+          <div class="method-card__subtitle">{{ 'paymentPage.methodDebitSubtitle' | translate }}</div>
+          <div class="method-card__hint" *ngIf="getMethodAvailabilityNote('debit')">{{ getMethodAvailabilityNote('debit') }}</div>
+        </button>
+        <button class="method-card" [class.method-card--active]="selectedPaymentMethod === 'upi'" [class.method-card--disabled]="!isMethodAvailable('upi')" (click)="choosePaymentMethod('upi')">
+          <div class="method-card__title">{{ 'paymentPage.payThroughUpiId' | translate }}</div>
+          <div class="method-card__subtitle">{{ 'paymentPage.methodUpiSubtitle' | translate }}</div>
+          <div class="method-card__hint" *ngIf="getMethodAvailabilityNote('upi')">{{ getMethodAvailabilityNote('upi') }}</div>
+        </button>
+        <button class="method-card" [class.method-card--active]="selectedPaymentMethod === 'wallet'" [class.method-card--disabled]="!isMethodAvailable('wallet')" (click)="choosePaymentMethod('wallet')">
+          <div class="method-card__title">{{ 'paymentPage.wallets' | translate }}</div>
+          <div class="method-card__subtitle">{{ 'paymentPage.methodWalletSubtitle' | translate }}</div>
+          <div class="method-card__hint" *ngIf="getMethodAvailabilityNote('wallet')">{{ getMethodAvailabilityNote('wallet') }}</div>
+        </button>
+        <button class="method-card" [class.method-card--active]="selectedPaymentMethod === 'netbanking'" [class.method-card--disabled]="!isMethodAvailable('netbanking')" (click)="choosePaymentMethod('netbanking')">
+          <div class="method-card__title">{{ 'paymentPage.netBanking' | translate }}</div>
+          <div class="method-card__subtitle">{{ 'paymentPage.methodNetbankingSubtitle' | translate }}</div>
+          <div class="method-card__hint" *ngIf="getMethodAvailabilityNote('netbanking')">{{ getMethodAvailabilityNote('netbanking') }}</div>
+        </button>
+      </div>
+
+      <div class="payment-selected-panel">
+        <div class="payment-selected-panel__header">{{ 'paymentPage.selectedMethod' | translate }}</div>
+        <div class="payment-selected-panel__body">
+          <div class="payment-selected-method">{{ selectedMethodDisplayName }}</div>
+          <div class="payment-selected-note">{{ 'paymentPage.selectedMethodNote' | translate }}</div>
+        </div>
+      </div>
+
+      <button class="payment-pay-button payment-pay-button--bottom" (click)="pay()" [disabled]="isLoading || !passseatarray.length">
+        {{ isLoading ? ('common.processing' | translate) : payButtonLabel }}
+      </button>
+
+      <div class="payment-inline-status" *ngIf="paymentStatusMessage">
+        {{ paymentStatusMessage }}
+      </div>
+    </div>
+
+    <aside class="payment-column payment-column--summary">
+      <div class="payment__fullContainer_rightContainer_trip_container">
+        <div class="travel_operator_info">
+          <div>
+            <div class="travel_title">{{ operatorname || ('paymentPage.busBooking' | translate) }}</div>
+            <div class="travel_specification">{{ routedetails?.duration }} {{ 'paymentPage.journeySuffix' | translate }}</div>
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="summary-pair">
+          <div>
+            <div class="summary-label">{{ 'paymentPage.bookingDate' | translate }}</div>
+            <div class="summary-value">{{ bookingdate | date: 'yyyy-MM-dd' }}</div>
+          </div>
+          <div>
+            <div class="summary-label">{{ 'paymentPage.seatsBooked' | translate }}</div>
+            <div class="summary-value">{{ passseatarray.join(', ') || '-' }}</div>
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="journey-block">
+          <div class="journey-stop">
+            <div class="summary-label">{{ 'paymentPage.boardingPoint' | translate }}</div>
+            <div class="journey-city">{{ routedetails?.departureLocation?.name || '-' }}</div>
+            <div class="journey-meta">{{ bookingdate }}</div>
+            <div class="journey-time">{{ busdepauturetime }}:00</div>
+          </div>
+          <div class="journey-divider"></div>
+          <div class="journey-stop">
+            <div class="summary-label">{{ 'paymentPage.droppingPoint' | translate }}</div>
+            <div class="journey-city">{{ routedetails?.arrivalLocation?.name || '-' }}</div>
+            <div class="journey-meta">{{ bookingdate }}</div>
+            <div class="journey-time">{{ busarrivaltime }}:00</div>
+          </div>
+        </div>
+
+        <div class="passangerInfo">
+          <mat-icon class="icons">account_box</mat-icon>
+          <div class="passangerName">{{ customerid?.name || customerid?.email || ('common.guestUser' | translate) }}</div>
+        </div>
+      </div>
+
+      <div class="payment__fullContainer_rightContainer_fair_container">
+        <div class="fare-row">
+          <div class="travel_title">{{ 'paymentPage.fareBreakup' | translate }}</div>
+        </div>
+        <div class="fare-row">
+          <div class="travel_specification">{{ 'paymentPage.baseFare' | translate }}</div>
+          <div class="travel_specification">Rs. {{ passfare }}</div>
+        </div>
+        <div class="fare-row" *ngIf="isinsurance">
+          <div class="travel_specification">{{ 'paymentPage.insuranceLabel' | translate }}</div>
+          <div class="travel_specification">Rs. {{ insuranceCharge }}</div>
+        </div>
+        <div class="fare-row" *ngIf="discountAmount">
+          <div class="travel_specification">{{ 'paymentPage.offerDiscount' | translate }}{{ appliedOfferCode ? ' (' + appliedOfferCode + ')' : '' }}</div>
+          <div class="travel_specification">- Rs. {{ discountAmount }}</div>
+        </div>
+        <div class="fare-row fare-row--strong">
+          <div class="travel_specification">{{ 'paymentPage.totalPayable' | translate }}</div>
+          <div class="travel_specification">Rs. {{ totalAmount }}</div>
+        </div>
+      </div>
+    </aside>
+  </section>
+</div>

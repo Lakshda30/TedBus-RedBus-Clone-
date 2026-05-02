@@ -1,0 +1,218 @@
+<div class="route-planner-page">
+  <section class="planner-card">
+    <h2>{{ 'routePlanner.heading' | translate }}</h2>
+    <p>{{ 'routePlanner.subtitle' | translate }}</p>
+
+    <div class="form-grid">
+      <label>
+        <span>{{ 'common.from' | translate }}</span>
+        <input [(ngModel)]="from" [placeholder]="'routePlanner.fromPlaceholder' | translate" />
+      </label>
+
+      <label>
+        <span>{{ 'common.to' | translate }}</span>
+        <input [(ngModel)]="to" [placeholder]="'routePlanner.toPlaceholder' | translate" />
+      </label>
+    </div>
+
+    <div class="waypoints-card">
+      <div class="waypoint-header">
+        <h3>{{ 'routePlanner.waypointsHeading' | translate }}</h3>
+        <button type="button" class="secondary-button" (click)="addWaypoint()">
+          {{ 'routePlanner.addWaypoint' | translate }}
+        </button>
+      </div>
+
+      <div class="waypoint-list">
+        <div class="waypoint-row" *ngFor="let waypoint of waypoints; let i = index">
+          <input
+            [(ngModel)]="waypoints[i]"
+            [placeholder]="'routePlanner.waypointPlaceholder' | translate:{ index: i + 1 }" />
+          <button type="button" class="secondary-button danger-button" (click)="removeWaypoint(i)">
+            {{ 'routePlanner.removeWaypoint' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="planner-toolbar">
+      <label>
+        <span>{{ 'routePlanner.compareBy' | translate }}</span>
+        <select [(ngModel)]="compareMode" (ngModelChange)="onCompareModeChange()">
+          <option *ngFor="let option of compareModes" [value]="option.key">
+            {{ getCompareLabel(option.labelKey) }}
+          </option>
+        </select>
+      </label>
+
+      <label class="toggle-row">
+        <input type="checkbox" [(ngModel)]="autoRefresh" (ngModelChange)="setupAutoRefresh()" />
+        <span>{{ 'routePlanner.autoRefresh' | translate }}</span>
+      </label>
+    </div>
+
+    <div class="action-row">
+      <button type="button" (click)="showRoute()" [disabled]="planning">
+        {{ planning ? ('routePlanner.planning' | translate) : ('routePlanner.showRoute' | translate) }}
+      </button>
+      <button type="button" class="secondary-button" (click)="refreshTraffic()">
+        {{ 'routePlanner.refreshTraffic' | translate }}
+      </button>
+      <button type="button" class="secondary-button" (click)="saveCurrentRoute()">
+        {{ 'routePlanner.saveRoute' | translate }}
+      </button>
+    </div>
+
+    <p *ngIf="plannerError" class="error-message">{{ plannerError }}</p>
+    <p *ngIf="plannerMessage" class="message">{{ plannerMessage }}</p>
+    <p *ngIf="lastUpdated" class="meta-text">
+      {{ 'routePlanner.lastUpdated' | translate:{ time: lastUpdated } }}
+    </p>
+
+    <div class="planner-layout">
+      <div class="map-frame">
+        <div #mapContainer class="map-canvas"></div>
+      </div>
+
+      <div class="route-results">
+        <div class="route-card" *ngFor="let route of routeOptions" [class.active]="selectedRouteIndex === route.index">
+          <div class="route-card-header">
+            <div>
+              <h3>{{ route.summary }}</h3>
+              <span *ngIf="route.recommended" class="badge recommended">
+                {{ 'routePlanner.recommended' | translate }}
+              </span>
+            </div>
+            <button type="button" class="secondary-button" (click)="selectRoute(route.index)">
+              {{ 'routePlanner.viewRoute' | translate }}
+            </button>
+          </div>
+
+          <div class="route-metrics">
+            <div>
+              <span>{{ 'routePlanner.distance' | translate }}</span>
+              <strong>{{ route.distanceText }}</strong>
+            </div>
+            <div>
+              <span>{{ 'routePlanner.baseTime' | translate }}</span>
+              <strong>{{ route.durationText }}</strong>
+            </div>
+            <div>
+              <span>{{ 'routePlanner.etaWithTraffic' | translate }}</span>
+              <strong>{{ route.durationInTrafficText }}</strong>
+            </div>
+          </div>
+
+          <div class="traffic-row">
+            <span class="badge" [class.low]="route.congestionLevel === 'low'" [class.medium]="route.congestionLevel === 'medium'" [class.high]="route.congestionLevel === 'high'">
+              {{ ('routePlanner.congestion.' + route.congestionLevel) | translate }}
+            </span>
+            <span>
+              {{ 'routePlanner.trafficDelay' | translate:{ delay: route.trafficDelayMinutes } }}
+            </span>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="!routeOptions.length && !plannerError">
+          <h3>{{ 'routePlanner.noRoutesTitle' | translate }}</h3>
+          <p>{{ 'routePlanner.noRoutesText' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="saved-routes" *ngIf="savedRoutes.length">
+      <div class="saved-header">
+        <h3>{{ 'routePlanner.savedRoutesHeading' | translate }}</h3>
+      </div>
+
+      <div class="saved-route-list">
+        <article class="saved-route-card" *ngFor="let route of savedRoutes">
+          <div>
+            <h4>{{ route.from }} -> {{ route.to }}</h4>
+            <p>{{ 'routePlanner.savedWaypoints' | translate:{ waypoints: formatWaypoints(route) } }}</p>
+          </div>
+          <div class="saved-actions">
+            <button type="button" class="secondary-button" (click)="loadSavedRoute(route)">
+              {{ 'routePlanner.loadRoute' | translate }}
+            </button>
+            <button type="button" class="secondary-button danger-button" (click)="removeSavedRoute(route.id)">
+              {{ 'routePlanner.removeSavedRoute' | translate }}
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="planner-card admin-card">
+    <h2>{{ 'routePlanner.scheduleHeading' | translate }}</h2>
+    <p>{{ 'routePlanner.scheduleSubtitle' | translate }}</p>
+
+    <div class="form-grid">
+      <label>
+        <span>{{ 'routePlanner.busId' | translate }}</span>
+        <input [(ngModel)]="busId" [placeholder]="'routePlanner.busIdPlaceholder' | translate" />
+      </label>
+
+      <label>
+        <span>{{ 'routePlanner.effectiveDate' | translate }}</span>
+        <input [(ngModel)]="effectiveDate" type="date" />
+      </label>
+
+      <label>
+        <span>{{ 'routePlanner.departureTime' | translate }}</span>
+        <input [(ngModel)]="departureTime" placeholder="18:30" />
+      </label>
+
+      <label>
+        <span>{{ 'routePlanner.arrivalTime' | translate }}</span>
+        <input [(ngModel)]="arrivalTime" placeholder="06:15" />
+      </label>
+    </div>
+
+    <label class="full-width">
+      <span>{{ 'common.note' | translate }}</span>
+      <textarea [(ngModel)]="note" rows="4" [placeholder]="'routePlanner.notePlaceholder' | translate"></textarea>
+    </label>
+
+    <button
+      type="button"
+      (click)="updateSchedule()"
+      [disabled]="updatingSchedule">
+      {{ updatingSchedule ? ('common.updating' | translate) : ('routePlanner.updateSchedule' | translate) }}
+    </button>
+
+    <p *ngIf="scheduleMessage" class="message">{{ scheduleMessage }}</p>
+  </section>
+
+  <section class="planner-card admin-card">
+    <h2>{{ 'routePlanner.promoHeading' | translate }}</h2>
+    <p>{{ 'routePlanner.promoSubtitle' | translate }}</p>
+
+    <div class="form-grid">
+      <label>
+        <span>{{ 'routePlanner.promoTitle' | translate }}</span>
+        <input [(ngModel)]="promoTitle" [placeholder]="'routePlanner.promoTitlePlaceholder' | translate" />
+      </label>
+
+      <label>
+        <span>{{ 'routePlanner.offerLabel' | translate }}</span>
+        <input [(ngModel)]="promoOfferTitle" [placeholder]="'routePlanner.offerLabelPlaceholder' | translate" />
+      </label>
+    </div>
+
+    <label class="full-width">
+      <span>{{ 'routePlanner.promoMessage' | translate }}</span>
+      <textarea [(ngModel)]="promoMessage" rows="4" [placeholder]="'routePlanner.promoMessagePlaceholder' | translate"></textarea>
+    </label>
+
+    <button
+      type="button"
+      (click)="sendPromotion()"
+      [disabled]="sendingPromo">
+      {{ sendingPromo ? ('common.sending' | translate) : ('routePlanner.sendPromotion' | translate) }}
+    </button>
+
+    <p *ngIf="promoMessageStatus" class="message">{{ promoMessageStatus }}</p>
+  </section>
+</div>

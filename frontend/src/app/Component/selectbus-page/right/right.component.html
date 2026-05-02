@@ -1,0 +1,28 @@
+<div class="results-panel">
+    <app-sorting-bar *ngIf="matchedbus.length"></app-sorting-bar>
+
+    <div *ngIf="loading" class="results-message">
+        {{ 'searchResults.loading' | translate }}
+    </div>
+
+    <div *ngIf="!loading && errorMessage" class="results-message results-message--error">
+        {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!loading && !errorMessage && matchedbus.length === 0" class="results-message">
+        {{ 'searchResults.noBusesFound' | translate }}
+    </div>
+
+    <div *ngFor="let bus of matchedbus">
+        <app-bus-box
+            [rating]="bus.rating"
+            [busid]="getBusId(bus)"
+            [operatorname]="bus.operatorName"
+            [bustype]="bus.busType"
+            [departuretime]="bus.departureTime"
+            [livetracking]="bus.liveTracking"
+            [reschedulable]="bus.reschedulable"
+            [filledseats]="getFilledSeats(bus)"
+            [routedetails]="routes"></app-bus-box>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+.dark-mode{
+  background:#121212;
+  color:white;
+}
+
+.dark-mode .bus-card{
+  background:#1e1e1e;
+}
+
+.dark-mode .seat{
+  border-color:white;
+}

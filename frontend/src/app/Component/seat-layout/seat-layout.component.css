@@ -1,0 +1,39 @@
+.bus-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.bus-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 60px);
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.seat {
+  width: 50px;
+  height: 50px;
+  background: #eee;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.seat:hover {
+  background: #ccc;
+}
+
+.selected {
+  background: #4CAF50;
+  color: white;
+}
+
+.booked {
+  background: #999;
+  cursor: not-allowed;
+}

@@ -1,0 +1,123 @@
+/* Global styles - Tailwind utilities are loaded via test-output.css in angular.json */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+::-webkit-scrollbar{
+    background: white;
+    width: 0;
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: white;
+}
+
+.dark-mode .navbar,
+.dark-mode .profile-card,
+.dark-mode .trip-card {
+  background: #1e1e1e;
+  color: white;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LANDING PAGE — DARK MODE OVERRIDES
+   Tailwind bg-white / text-gray-* classes are hardcoded and
+   won't respond to dark mode; these global rules override them.
+══════════════════════════════════════════════════════════════ */
+
+/* Search bar white card */
+.dark-mode app-landing-page [class*="lg:h-24"],
+.dark-mode app-landing-page div[class*="bg-white"] {
+  background-color: #1e1e1e !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e5e7eb;
+}
+
+/* Swap icon circle */
+.dark-mode app-landing-page div[class*="rounded-full"][class*="bg-white"] {
+  background-color: #2d2d2d !important;
+}
+
+/* Input fields in search bar */
+.dark-mode app-landing-page input[class*="outline-none"] {
+  background: transparent !important;
+  color: #e5e7eb !important;
+}
+.dark-mode app-landing-page input[class*="outline-none"]::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Dividers in search bar */
+.dark-mode app-landing-page [class*="border-gray-300"] {
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Date label text */
+.dark-mode app-landing-page p[class*="text-gray-400"] {
+  color: #9ca3af !important;
+}
+
+/* Offers card outer white container */
+.dark-mode app-landing-page div[class*="md:rounded-3xl"][class*="bg-white"] {
+  background-color: #1e1e1e !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+}
+
+/* "Trending Offers" text */
+.dark-mode app-landing-page h2[class*="text-gray-600"] {
+  color: #d1d5db !important;
+}
+
+/* View All button */
+.dark-mode app-landing-page button[class*="text-blue-600"] {
+  color: #93c5fd !important;
+  border-color: rgba(255,255,255,0.2) !important;
+}
+
+/* FAQ section heading */
+.dark-mode app-landing-page h1[class*="text-gray-700"] {
+  color: #d1d5db !important;
+}
+
+/* FAQ tab links */
+.dark-mode app-landing-page div[class*="flex gap-6"] > a {
+  color: #9ca3af !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+.dark-mode app-landing-page a[class*="text-main-color"] {
+  color: #f87171 !important;
+}
+
+/* FAQ accordion cards */
+.dark-mode app-landing-page div[class*="cursor-pointer"][class*="bg-white"] {
+  background-color: #1e1e1e !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e5e7eb !important;
+}
+.dark-mode app-landing-page div[class*="cursor-pointer"][class*="bg-white"]:hover {
+  background-color: #272727 !important;
+}
+
+/* FAQ question headings */
+.dark-mode app-landing-page div[class*="cursor-pointer"] h3 {
+  color: #e5e7eb !important;
+}
+/* FAQ answer text */
+.dark-mode app-landing-page div[class*="cursor-pointer"] p {
+  color: #9ca3af !important;
+}
+/* Plus/minus icons */
+.dark-mode app-landing-page div[class*="cursor-pointer"] i {
+  color: #9ca3af !important;
+}
+/* Links inside answers */
+.dark-mode app-landing-page div[class*="cursor-pointer"] a[class*="text-blue-500"] {
+  color: #60a5fa !important;
+}

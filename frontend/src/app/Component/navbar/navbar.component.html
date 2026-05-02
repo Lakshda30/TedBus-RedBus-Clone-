@@ -1,0 +1,105 @@
+<nav class="site-header">
+  <div class="site-header__top">
+    <div class="brand-block" (click)="navigate('/')" role="button" tabindex="0">
+      <img
+        class="brand-block__logo"
+        src="../../../assets/red-bus-with-word-bus-it_600323-482.avif"
+        alt="Tedbus Logo" />
+      <div class="brand-block__copy">
+        <div class="brand-block__title">Tedbus</div>
+        <div class="brand-block__tag">{{ 'navbar.brandTagline' | translate }}</div>
+      </div>
+    </div>
+
+    <div class="quick-links">
+      <a
+        *ngFor="let item of utilityLinks; trackBy: trackByLabel"
+        [routerLink]="item.route"
+        class="quick-link">
+        <i *ngIf="item.iconClass" [class]="item.iconClass"></i>
+        <span>{{ item.labelKey | translate }}</span>
+      </a>
+    </div>
+
+    <div class="header-actions">
+      <div class="notification-center" *ngIf="isloggedIn">
+        <button (click)="toggleNotifications()" class="notification-button" type="button" [attr.aria-label]="'common.notifications' | translate">
+          <i class="fa-regular fa-bell"></i>
+          <span *ngIf="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+        </button>
+
+        <div *ngIf="showNotifications" class="notification-dropdown">
+          <div class="notification-dropdown__header">
+            <span>{{ 'common.notifications' | translate }}</span>
+            <a routerLink="/notifications" (click)="showNotifications = false">{{ 'common.all' | translate }}</a>
+          </div>
+
+          <button
+            *ngFor="let n of notifications | slice:0:6"
+            type="button"
+            class="notification-item"
+            [class.notification-item--read]="n.read"
+            (click)="markAsRead(n)">
+            <div class="notification-item__title">{{ getNotificationPreview(n) }}</div>
+            <div class="notification-item__text">{{ n.message }}</div>
+          </button>
+
+          <div *ngIf="notifications.length === 0" class="notification-empty">
+            {{ 'notificationsPage.emptyTitle' | translate }}
+          </div>
+        </div>
+      </div>
+
+      <label class="language-switcher">
+        <span>{{ 'common.language' | translate }}</span>
+        <select [ngModel]="currentLang" (ngModelChange)="changeLanguage($event)">
+          <option *ngFor="let language of supportedLanguages" [value]="language">
+            {{ language === 'hi' ? ('common.hindi' | translate) : ('common.english' | translate) }}
+          </option>
+        </select>
+      </label>
+
+      <button type="button" class="theme-toggle" (click)="toggleTheme()">
+        <i [class]="isDarkMode ? 'fa-regular fa-sun' : 'fa-regular fa-moon'"></i>
+      </button>
+
+      <div class="google-login" *ngIf="!isloggedIn">
+        <div #googleButtonHost></div>
+        <p *ngIf="googleLoginError" class="google-login__hint">{{ googleLoginError }}</p>
+      </div>
+
+      <div class="account-panel" *ngIf="isloggedIn">
+        <button class="account-panel__trigger" [matMenuTriggerFor]="menu" type="button">
+          <div class="account-panel__avatar">{{ (userName || 'U').charAt(0) | uppercase }}</div>
+          <div class="account-panel__meta">
+            <span class="account-panel__label">{{ 'common.account' | translate }}</span>
+            <span class="account-panel__name">{{ userName || ('common.user' | translate) }}</span>
+          </div>
+          <i class="fa-solid fa-angle-down"></i>
+        </button>
+
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item type="button" (click)="navigate('/profile')">{{ 'navbar.myProfile' | translate }}</button>
+          <button mat-menu-item type="button" (click)="navigate('/notifications')">{{ 'common.notifications' | translate }}</button>
+          <button mat-menu-item type="button" (click)="handlelogout()">{{ 'common.signOut' | translate }}</button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-header__bottom">
+    <a
+      *ngFor="let item of productLinks; trackBy: trackByLabel"
+      (click)="navigateProduct(item)"
+      class="product-card"
+      [ngClass]="item.accentClass">
+      <div class="product-card__icon">
+        <i *ngIf="item.iconClass" [class]="item.iconClass"></i>
+      </div>
+      <div class="product-card__content">
+        <span class="product-card__title">{{ item.labelKey | translate }}</span>
+        <span class="product-card__subtitle">{{ 'navbar.productSubtitle' | translate }}</span>
+      </div>
+    </a>
+  </div>
+</nav>

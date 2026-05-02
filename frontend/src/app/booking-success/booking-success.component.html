@@ -1,0 +1,10 @@
+<div style="text-align:center;margin-top:50px">
+  <h1>{{ 'bookingSuccess.heading' | translate }}</h1>
+  <p>{{ 'bookingSuccess.subtitle' | translate }}</p>
+  <p><b>{{ 'common.bus' | translate }} ID:</b> {{ busId }}</p>
+  <p><b>{{ 'common.seats' | translate }}:</b> {{ seats.join(', ') }}</p>
+  <p><b>{{ 'common.date' | translate }}:</b> {{ today }}</p>
+  <button (click)="downloadTicket()">{{ 'bookingSuccess.downloadTicket' | translate }}</button>
+  <br><br>
+  <button routerLink="/">{{ 'bookingSuccess.goHome' | translate }}</button>
+</div>

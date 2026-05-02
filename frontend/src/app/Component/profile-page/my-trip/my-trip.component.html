@@ -1,0 +1,11 @@
+<div *ngIf="booking.length === 0">
+  <p>{{ 'common.noTripsYet' | translate }}</p>
+</div>
+
+<div *ngFor="let trip of booking" class="trip-card">
+  <img *ngIf="randomimage" [src]="randomimage" alt="Trip" class="trip-preview" />
+  <p><b>{{ 'common.status' | translate }}:</b> {{ trip.status }}</p>
+  <p><b>{{ 'common.bus' | translate }}:</b> {{ trip.busId || trip.busName }}</p>
+  <p><b>{{ 'common.date' | translate }}:</b> {{ trip.bookingDate || trip.date }}</p>
+  <p><b>{{ 'common.seats' | translate }}:</b> {{ trip.seats }}</p>
+</div>

@@ -1,0 +1,161 @@
+<div class="notifications-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">{{ 'notificationsPage.heading' | translate }}</h2>
+      <p class="page-subtitle">{{ 'notificationsPage.subtitle' | translate }}</p>
+    </div>
+    <div class="header-actions">
+      <div class="count-pill">{{ 'notificationsPage.unreadCount' | translate:{ count: unreadCount } }}</div>
+      <button type="button" class="btn-mark-all" (click)="markAllAsRead()" [disabled]="unreadCount === 0">
+        {{ 'notificationsPage.markAllAsRead' | translate }}
+      </button>
+      <button type="button" class="btn-settings" (click)="toggleSettings()">
+        <span class="material-icons">tune</span>
+        {{ showSettings ? 'Close Settings' : 'Notification Settings' }}
+      </button>
+    </div>
+  </div>
+
+  <p *ngIf="pageMessage" class="page-message">{{ pageMessage }}</p>
+
+  <!-- INLINE NOTIFICATION SETTINGS PANEL -->
+  <div class="settings-panel" *ngIf="showSettings">
+    <div class="settings-panel-inner">
+      <h3 class="settings-title">
+        <span class="material-icons">tune</span>
+        {{ 'notificationSettings.heading' | translate }}
+      </h3>
+
+      <p *ngIf="settingsLoading" class="settings-loading">{{ 'notificationSettings.loading' | translate }}</p>
+
+      <div *ngIf="!settingsLoading" class="settings-grid">
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-icon-wrap"><span class="material-icons">email</span></div>
+            <div>
+              <p class="setting-label">{{ 'notificationSettings.emailNotifications' | translate }}</p>
+              <p class="setting-desc">Receive booking updates and alerts via email</p>
+            </div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="settingsEmail">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-icon-wrap"><span class="material-icons">notifications_active</span></div>
+            <div>
+              <p class="setting-label">{{ 'notificationSettings.pushNotifications' | translate }}</p>
+              <p class="setting-desc" *ngIf="settingsPushPermission !== 'granted'" style="color: #f59e0b; font-weight: 600;">{{ getSettingsPushLabel() }}</p>
+              <p class="setting-desc" *ngIf="settingsPushPermission === 'granted'">Browser push notifications are enabled</p>
+            </div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="settingsPush">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-icon-wrap"><span class="material-icons">local_offer</span></div>
+            <div>
+              <p class="setting-label">{{ 'notificationSettings.promotionalMessages' | translate }}</p>
+              <p class="setting-desc">Deals, offers and promotional alerts</p>
+            </div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" [(ngModel)]="settingsPromos">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-icon-wrap"><span class="material-icons">language</span></div>
+            <div>
+              <p class="setting-label">{{ 'notificationSettings.preferredLanguage' | translate }}</p>
+              <p class="setting-desc">Language used in notifications and app UI</p>
+            </div>
+          </div>
+          <select [(ngModel)]="settingsLanguage" class="lang-select">
+            <option value="en">{{ 'common.english' | translate }}</option>
+            <option value="hi">{{ 'common.hindi' | translate }}</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="settings-footer" *ngIf="!settingsLoading">
+        <p *ngIf="settingsMessage"
+           [style.color]="settingsMessage.includes('fail') || settingsMessage.includes('Failed') ? '#ef4444' : '#22c55e'"
+           class="settings-msg">{{ settingsMessage }}</p>
+        <button type="button" class="btn-save" (click)="saveSettings()" [disabled]="settingsSaving">
+          <span *ngIf="settingsSaving" class="material-icons spin-icon">sync</span>
+          {{ settingsSaving ? ('common.saving' | translate) : ('notificationSettings.saveSettings' | translate) }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER ROW -->
+  <div class="filter-row">
+    <button
+      *ngFor="let option of filterOptions"
+      type="button"
+      class="filter-chip"
+      [class.active]="activeFilter === option.key"
+      (click)="setFilter(option.key)">
+      {{ option.labelKey | translate }}
+    </button>
+  </div>
+
+  <!-- NOTIFICATION CARDS -->
+  <div class="notifications-list" *ngIf="filteredNotifications.length > 0; else emptyState">
+    <article
+      *ngFor="let n of filteredNotifications"
+      class="notification-card"
+      [class.unread]="!n.read">
+      <div class="card-top">
+        <div>
+          <span class="type-badge">{{ getTypeLabel(n.type) }}</span>
+          <h3>{{ n.title || ('notificationsPage.notificationTitleFallback' | translate) }}</h3>
+        </div>
+        <small class="card-date">{{ n.createdAt | date:'medium' }}</small>
+      </div>
+
+      <p class="message">{{ n.message }}</p>
+
+      <div class="status-row" *ngIf="n.deliveryStatus">
+        <span>{{ 'notificationsPage.deliveryStatusInApp' | translate:{ status: n.deliveryStatus.inApp || 'n/a' } }}</span>
+        <span>{{ 'notificationsPage.deliveryStatusEmail' | translate:{ status: n.deliveryStatus.email || 'n/a' } }}</span>
+        <span>{{ 'notificationsPage.deliveryStatusPush' | translate:{ status: n.deliveryStatus.push || 'n/a' } }}</span>
+      </div>
+
+      <div class="card-actions">
+        <span class="read-state" [class.read]="n.read">
+          {{ n.read ? ('common.read' | translate) : ('common.unread' | translate) }}
+        </span>
+        <button *ngIf="!n.read" type="button" class="btn-mark-read" (click)="markRead(n)">
+          {{ 'notificationsPage.markRead' | translate }}
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fa-regular fa-bell-slash"></i>
+      </div>
+      <h3>{{ 'notificationsPage.emptyTitle' | translate }}</h3>
+      <p>{{ 'notificationsPage.emptyText' | translate }}</p>
+    </div>
+  </ng-template>
+
+</div>

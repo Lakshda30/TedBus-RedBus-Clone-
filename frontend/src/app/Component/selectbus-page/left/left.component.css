@@ -1,0 +1,93 @@
+/* ── FILTER PANEL WRAPPER ───────────────────────────────────── */
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── FILTER SECTION BLOCK ──────────────────────────────────── */
+.left_filters {
+  padding: 18px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.left_filters:last-child { border-bottom: none; }
+
+/* Section label */
+.left_filters > p {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin: 0 0 12px;
+}
+
+/* Filter list */
+.left_filters > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Each filter row */
+.left_filters li {
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.left_filters li:hover { background: rgba(128, 128, 128, 0.07); }
+
+/* Row layout */
+.first-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+}
+
+/* Checkbox */
+.first-section input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #ea580c;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Material icon */
+.first-section mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+/* Label text */
+.first-section span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  flex: 1;
+  text-transform: capitalize;
+}
+
+/* Active check icon (green) */
+.first-section mat-icon[style*="green"] {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+}
+
+/* ══════════════════════════════════
+   DARK MODE
+══════════════════════════════════ */
+.dark-mode .left_filters { border-bottom-color: #334155; }
+.dark-mode .left_filters > p { color: #64748b; }
+.dark-mode .first-section span { color: #cbd5e1; }
+.dark-mode .first-section mat-icon { color: #64748b; }
+.dark-mode .left_filters li:hover { background: rgba(255, 255, 255, 0.05); }

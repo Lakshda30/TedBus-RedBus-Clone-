@@ -1,0 +1,289 @@
+<div class="min-h-screen px-8" style="padding-top: 40px; padding-bottom: 40px;">
+  <div class="mx-auto flex flex-row items-start" style="max-width: 1200px; gap: 32px;">
+    
+    <!-- LEFT SIDEBAR -->
+    <div class="profile-card flex-shrink-0 bg-white rounded-2xl shadow-lg p-6 transition-all duration-300" style="width: 300px; border: 1px solid rgba(229, 231, 235, 0.1);">
+      <!-- Avatar -->
+      <div class="flex flex-col items-center mb-6">
+        <div class="rounded-full bg-main-color flex items-center justify-center text-white text-4xl font-bold mb-4 shadow-md" style="width: 96px; height: 96px;">
+          {{ customer?.name?.charAt(0) || 'U' }}
+        </div>
+        <h2 class="text-2xl font-bold text-center">{{ customer?.name || 'User' }}</h2>
+        <p class="text-sm opacity-70 text-center break-all mt-1">{{ customer?.email }}</p>
+      </div>
+      
+      <!-- Menu -->
+      <nav class="space-y-2" style="margin-top: 32px;">
+        <button (click)="activeTab='dashboard'"
+          [class]="activeTab==='dashboard' ? 
+          'w-full flex items-center bg-red-500 text-white font-semibold shadow-md transition-all rounded-xl' : 
+          'w-full flex items-center opacity-70 hover:opacity-100 hover:bg-black/5 transition-all rounded-xl'"
+          style="gap: 16px; padding: 14px 20px;">
+          <span class="material-icons" style="font-size: 22px;">dashboard</span> <span class="text-lg">Dashboard</span>
+        </button>
+        <button (click)="activeTab='trips'"
+          [class]="activeTab==='trips' ? 
+          'w-full flex items-center bg-red-500 text-white font-semibold shadow-md transition-all rounded-xl' : 
+          'w-full flex items-center opacity-70 hover:opacity-100 hover:bg-black/5 transition-all rounded-xl'"
+          style="gap: 16px; padding: 14px 20px;">
+          <span class="material-icons" style="font-size: 22px;">directions_bus</span> <span class="text-lg">My Trips</span>
+        </button>
+        <button (click)="activeTab='profile'"
+          [class]="activeTab==='profile' ? 
+          'w-full flex items-center bg-red-500 text-white font-semibold shadow-md transition-all rounded-xl' : 
+          'w-full flex items-center opacity-70 hover:opacity-100 hover:bg-black/5 transition-all rounded-xl'"
+          style="gap: 16px; padding: 14px 20px;">
+          <span class="material-icons" style="font-size: 22px;">person</span> <span class="text-lg">My Profile</span>
+        </button>
+        <button (click)="activeTab='wallet'"
+          [class]="activeTab==='wallet' ? 
+          'w-full flex items-center bg-red-500 text-white font-semibold shadow-md transition-all rounded-xl' : 
+          'w-full flex items-center opacity-70 hover:opacity-100 hover:bg-black/5 transition-all rounded-xl'"
+          style="gap: 16px; padding: 14px 20px;">
+          <span class="material-icons" style="font-size: 22px;">account_balance_wallet</span> <span class="text-lg">Wallet</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div style="flex: 1; min-width: 0;">
+
+      <!-- MY PROFILE TAB -->
+      <div *ngIf="activeTab==='profile'" class="profile-card bg-white rounded-2xl shadow-lg transition-all duration-300" style="padding: 40px; border: 1px solid rgba(128, 128, 128, 0.15);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(128, 128, 128, 0.2); padding-bottom: 24px; margin-bottom: 32px;">
+          <h2 class="text-3xl font-bold" style="margin: 0;">My Profile</h2>
+          <button *ngIf="!isEditingProfile" (click)="openEditProfile()" class="bg-main-color text-white rounded-full hover:bg-red-600 transition-colors shadow-md font-bold text-base" style="padding: 10px 24px; display: flex; align-items: center; gap: 8px;">
+            <span class="material-icons" style="font-size: 18px;">edit</span> Edit Profile
+          </button>
+        </div>
+
+        <!-- DISPLAY MODE -->
+        <div *ngIf="!isEditingProfile" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+          
+          <!-- Field 1 -->
+          <div style="background: rgba(128, 128, 128, 0.05); border: 1px solid rgba(128, 128, 128, 0.1); border-radius: 16px; padding: 24px; display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: rgba(128, 128, 128, 0.1); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span class="material-icons" style="font-size: 24px; opacity: 0.7;">badge</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; font-weight: 700; margin-bottom: 6px;">Full Name</p>
+              <p style="font-size: 20px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ customer?.name || '—' }}</p>
+            </div>
+          </div>
+
+          <!-- Field 2 -->
+          <div style="background: rgba(128, 128, 128, 0.05); border: 1px solid rgba(128, 128, 128, 0.1); border-radius: 16px; padding: 24px; display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: rgba(128, 128, 128, 0.1); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span class="material-icons" style="font-size: 24px; opacity: 0.7;">email</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; font-weight: 700; margin-bottom: 6px;">Email Address</p>
+              <p style="font-size: 20px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ customer?.email }}">{{ customer?.email || '—' }}</p>
+            </div>
+          </div>
+
+          <!-- Field 3 -->
+          <div style="background: rgba(128, 128, 128, 0.05); border: 1px solid rgba(128, 128, 128, 0.1); border-radius: 16px; padding: 24px; display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: rgba(128, 128, 128, 0.1); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span class="material-icons" style="font-size: 24px; opacity: 0.7;">phone</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; font-weight: 700; margin-bottom: 6px;">Phone Number</p>
+              <p style="font-size: 20px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ customer?.phone || 'Not added' }}</p>
+            </div>
+          </div>
+
+          <!-- Field 4 -->
+          <div style="background: rgba(128, 128, 128, 0.05); border: 1px solid rgba(128, 128, 128, 0.1); border-radius: 16px; padding: 24px; display: flex; align-items: flex-start; gap: 16px;">
+            <div style="background: rgba(128, 128, 128, 0.1); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <span class="material-icons" style="font-size: 24px; opacity: 0.7;">person</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; font-weight: 700; margin-bottom: 6px;">Gender</p>
+              <p style="font-size: 20px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ customer?.gender || 'Not added' }}</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- EDIT MODE -->
+        <div *ngIf="isEditingProfile" style="display: flex; flex-direction: column; gap: 24px;">
+          <p *ngIf="profileMessage" [ngClass]="profileMessage.includes('Failed') ? 'text-red-500' : 'text-green-500'" style="font-weight: bold; margin-bottom: 8px;">{{ profileMessage }}</p>
+
+          <div style="background: rgba(128, 128, 128, 0.05); border: 1px solid rgba(128, 128, 128, 0.1); border-radius: 16px; padding: 32px;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 32px;">
+              
+              <!-- Full Name Input -->
+              <div>
+                <label style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; font-weight: 700; margin-bottom: 8px; display: block;">Full Name</label>
+                <input type="text" [(ngModel)]="editCustomerData.name" placeholder="Enter your full name" style="width: 100%; background: rgba(128,128,128,0.1); border: 1px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 16px; font-size: 18px; font-weight: 600; outline: none; color: inherit;">
+              </div>
+
+              <!-- Email (Disabled) -->
+              <div>
+                <label style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; font-weight: 700; margin-bottom: 8px; display: block;">Email Address</label>
+                <input type="email" [value]="customer?.email" disabled style="width: 100%; background: rgba(128,128,128,0.05); border: 1px solid rgba(128,128,128,0.1); border-radius: 12px; padding: 16px; font-size: 18px; font-weight: 600; outline: none; color: inherit; opacity: 0.5; cursor: not-allowed;">
+              </div>
+
+              <!-- Phone Input -->
+              <div>
+                <label style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; font-weight: 700; margin-bottom: 8px; display: block;">Phone Number</label>
+                <input type="tel" [(ngModel)]="editCustomerData.phone" (input)="onPhoneInput($event)" placeholder="10-digit phone number" style="width: 100%; background: rgba(128,128,128,0.1); border: 1px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 16px; font-size: 18px; font-weight: 600; outline: none; color: inherit;">
+                <p *ngIf="editCustomerData.phone && editCustomerData.phone.length > 0 && editCustomerData.phone.length !== 10" style="color: #ef4444; font-size: 13px; font-weight: bold; margin-top: 8px;">Phone number must be exactly 10 digits.</p>
+              </div>
+
+              <!-- Gender Select -->
+              <div>
+                <label style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; font-weight: 700; margin-bottom: 8px; display: block;">Gender</label>
+                <select [(ngModel)]="editCustomerData.gender" style="width: 100%; background: rgba(128,128,128,0.1); border: 1px solid rgba(128,128,128,0.2); border-radius: 12px; padding: 16px; font-size: 18px; font-weight: 600; outline: none; color: inherit;">
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="Male" style="color: black;">Male</option>
+                  <option value="Female" style="color: black;">Female</option>
+                  <option value="Other" style="color: black;">Other</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; justify-content: flex-end; align-items: center; gap: 16px; border-top: 1px solid rgba(128,128,128,0.2); padding-top: 24px;">
+              <button (click)="closeEditProfile()" style="padding: 12px 32px; background: rgba(128,128,128,0.1); border-radius: 99px; font-weight: bold; font-size: 16px; transition: all 0.2s;">
+                Cancel
+              </button>
+              <button (click)="saveProfile()" [disabled]="savingProfile || !isProfileValid()" class="bg-main-color text-white shadow-md hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed" style="padding: 12px 32px; border-radius: 99px; font-weight: bold; font-size: 16px; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                <span *ngIf="savingProfile" class="material-icons animate-spin" style="font-size: 18px;">sync</span>
+                {{ savingProfile ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MY TRIPS TAB -->
+      <div *ngIf="activeTab==='trips'">
+        <div class="profile-card bg-white rounded-2xl shadow-lg transition-all duration-300" style="padding: 40px; border: 1px solid rgba(128, 128, 128, 0.15);">
+          <h2 class="text-3xl font-bold mb-8 border-b pb-4" style="border-bottom: 1px solid rgba(128, 128, 128, 0.2);">My Trips</h2>
+
+          <!-- Empty State -->
+          <div *ngIf="mytrip.length === 0" class="text-center" style="padding: 64px 0;">
+            <div style="background: rgba(128, 128, 128, 0.05); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 24px; width: 140px; height: 140px; border: 1px solid rgba(128, 128, 128, 0.1);">
+              <span class="material-icons opacity-50" style="font-size: 72px;">directions_bus</span>
+            </div>
+            <h3 class="text-2xl font-bold mb-3">No trips yet</h3>
+            <p class="opacity-70 mb-8 max-w-md mx-auto text-lg">Start booking your journey now and explore the world with us!</p>
+            <button routerLink="/" class="bg-main-color text-white rounded-full hover:bg-red-600 transition-colors shadow-lg font-bold text-lg" style="padding: 16px 40px;">
+              Book a Journey
+            </button>
+          </div>
+
+          <!-- Trip List -->
+          <div *ngIf="mytrip.length > 0" class="flex flex-col" style="gap: 24px;">
+            <p *ngIf="tripMessage" class="text-green-500 font-bold mb-2">{{ tripMessage }}</p>
+            <p *ngIf="reviewMessage" class="text-green-500 font-bold mb-2">{{ reviewMessage }}</p>
+            
+            <div *ngFor="let trip of mytrip" class="trip-card bg-white rounded-2xl p-6 relative overflow-hidden group hover:shadow-xl transition-all duration-300" style="border: 1px solid rgba(128, 128, 128, 0.2);">
+              <div class="absolute left-0 top-0 bottom-0 bg-main-color rounded-l-2xl" style="width: 6px;"></div>
+              
+              <div class="flex flex-col md:flex-row justify-between md:items-center pl-4" style="gap: 16px;">
+                <div class="flex flex-col">
+                  <h3 class="text-2xl font-bold">{{ trip.busId || 'Bus Booking' }}</h3>
+                  <div class="flex flex-wrap text-sm opacity-80 font-medium" style="gap: 24px; margin-top: 16px;">
+                    <p class="flex items-center gap-2"><span class="material-icons" style="font-size: 20px;">event</span> {{ trip.bookingDate | date:'mediumDate' }}</p>
+                    <p class="flex items-center gap-2"><span class="material-icons" style="font-size: 20px;">airline_seat_recline_normal</span> Seats: {{ trip.seats }}</p>
+                    <p class="flex items-center gap-2"><span class="material-icons" style="font-size: 20px;">info</span> 
+                      <span [ngClass]="trip.status === 'cancelled' ? 'text-red-500 font-bold' : 'text-green-500 font-bold'">{{ trip.status | titlecase }}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex flex-col items-start md:items-end mt-4 md:mt-0" style="gap: 8px;">
+                  <button *ngIf="trip.status !== 'cancelled'" (click)="cancelTrip(trip)" [disabled]="cancellingBookingId === trip._id" 
+                          class="text-red-500 hover:bg-red-500 hover:text-white rounded-xl font-bold transition-all disabled:opacity-50" style="padding: 12px 24px; border: 2px solid #ef4444;">
+                    {{ cancellingBookingId === trip._id ? 'Cancelling...' : 'Cancel Booking' }}
+                  </button>
+                  <p *ngIf="trip.status === 'cancelled'" class="text-white font-bold bg-red-500 rounded-xl shadow-sm" style="padding: 12px 24px;">Cancelled</p>
+                </div>
+              </div>
+
+              <!-- Reviews Section -->
+              <div *ngIf="canReviewTrip(trip)" class="border-t pl-4" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(128, 128, 128, 0.2);">
+                <div class="flex justify-between items-center">
+                  <h4 class="font-bold text-xl">Trip Review</h4>
+                  
+                  <button *ngIf="!hasReview(trip)" (click)="openReviewForm(trip)" class="text-sm rounded-full font-bold transition-all" style="padding: 10px 24px; background: rgba(128,128,128,0.1);">
+                    Add Review
+                  </button>
+
+                  <button *ngIf="hasReview(trip) && canEditReview(trip)" (click)="openReviewForm(trip)" class="text-sm rounded-full font-bold transition-all" style="padding: 10px 24px; background: rgba(128,128,128,0.1);">
+                    Edit Review
+                  </button>
+                </div>
+
+                <p *ngIf="hasReview(trip) && !canEditReview(trip)" class="text-sm opacity-60 mt-2 italic">
+                  Review period has expired.
+                </p>
+
+                <!-- Existing Review Display -->
+                <div *ngIf="trip._id && reviewMap[trip._id]" class="rounded-2xl p-6" style="margin-top: 24px; background: rgba(128,128,128,0.05); border: 1px solid rgba(128,128,128,0.1);">
+                  <div class="flex items-center mb-4 text-yellow-500" style="gap: 8px;">
+                    <span class="material-icons drop-shadow-sm" style="font-size: 24px;" *ngFor="let star of [1,2,3,4,5]">{{ star <= (reviewMap[trip._id]?.rating || 0) ? 'star' : 'star_border' }}</span>
+                    <span class="text-base opacity-80 font-bold" style="margin-left: 12px; color: inherit;">{{ reviewMap[trip._id]?.rating }}/5</span>
+                  </div>
+                  <p class="opacity-90 text-lg leading-relaxed">{{ reviewMap[trip._id]?.reviewText }}</p>
+                </div>
+
+                <!-- Review Form -->
+                <div *ngIf="selectedReviewBookingId === trip._id" class="rounded-3xl shadow-inner" style="margin-top: 24px; padding: 32px; background: rgba(128,128,128,0.05); border: 1px solid rgba(128,128,128,0.1);">
+                  <label class="block text-base font-bold mb-3 opacity-80">Rating</label>
+                  <select [(ngModel)]="rating" class="w-full outline-none focus:ring-2 focus:ring-red-500/20 transition-all font-bold text-lg rounded-xl" style="padding: 16px 20px; margin-bottom: 24px; background: rgba(128,128,128,0.05); border: 1px solid rgba(128,128,128,0.2); color: inherit;">
+                    <option *ngFor="let value of [1, 2, 3, 4, 5]" [ngValue]="value">{{ value }} Stars</option>
+                  </select>
+
+                  <label class="block text-base font-bold mb-3 opacity-80">Write your review</label>
+                  <textarea [(ngModel)]="reviewText" placeholder="Tell us about your journey (min 20 chars)..." rows="4" class="w-full outline-none focus:ring-2 focus:ring-red-500/20 resize-none transition-all font-medium text-lg rounded-xl" style="padding: 16px 20px; margin-bottom: 24px; background: rgba(128,128,128,0.05); border: 1px solid rgba(128,128,128,0.2); color: inherit;"></textarea>
+
+                  <div class="flex justify-end mt-4" style="gap: 16px;">
+                    <button type="button" (click)="closeReviewForm()" class="opacity-70 hover:opacity-100 rounded-xl font-bold transition-all text-lg" style="padding: 12px 32px; background: rgba(128,128,128,0.1);">
+                      Cancel
+                    </button>
+                    <button (click)="submitReview(trip)" [disabled]="savingReview || reviewText.trim().length < 20" class="bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all shadow-md disabled:opacity-50 text-lg" style="padding: 12px 32px;">
+                      {{ savingReview ? 'Saving...' : 'Submit Review' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD TAB -->
+      <div *ngIf="activeTab==='dashboard'" class="profile-card bg-white rounded-2xl shadow-lg transition-all duration-300" style="padding: 40px; border: 1px solid rgba(128, 128, 128, 0.15);">
+        <h2 class="text-3xl font-bold mb-8 pb-4" style="border-bottom: 1px solid rgba(128, 128, 128, 0.2);">Dashboard</h2>
+        <div style="background: rgba(128, 128, 128, 0.05); border: 1px solid rgba(128, 128, 128, 0.1); border-radius: 20px; padding: 48px 40px; text-align: center;">
+          <div style="background: rgba(128, 128, 128, 0.1); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; width: 88px; height: 88px; margin-bottom: 24px;">
+            <span class="material-icons" style="font-size: 40px; opacity: 0.6;">waving_hand</span>
+          </div>
+          <h3 style="font-size: 28px; font-weight: 800; margin-bottom: 16px;">Welcome back, {{ customer?.name || 'Traveler' }}!</h3>
+          <p style="font-size: 18px; opacity: 0.6; max-width: 500px; margin: 0 auto;">Ready for your next adventure? Check your upcoming trips or book a new journey.</p>
+        </div>
+      </div>
+
+      <!-- WALLET TAB -->
+      <div *ngIf="activeTab==='wallet'" class="profile-card bg-white rounded-2xl shadow-lg text-center transition-all duration-300" style="padding: 60px 40px; border: 1px solid rgba(128, 128, 128, 0.15);">
+        <div style="background: rgba(128, 128, 128, 0.05); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin: 0 auto 32px auto; width: 140px; height: 140px; border: 1px solid rgba(128, 128, 128, 0.1);">
+          <span class="material-icons" style="font-size: 70px; opacity: 0.4;">account_balance_wallet</span>
+        </div>
+        <h3 class="text-3xl font-bold mb-4">Wallet Balance</h3>
+        <p style="font-size: 48px; font-weight: 800; margin-bottom: 16px;">₹0</p>
+        <p style="opacity: 0.6; font-size: 18px; margin-bottom: 40px;">Your wallet balance is currently zero.</p>
+        <button class="bg-main-color text-white rounded-full hover:bg-red-600 transition-colors shadow-lg font-bold" style="padding: 16px 48px; font-size: 18px;">
+          Add Funds
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

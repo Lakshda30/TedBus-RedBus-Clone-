@@ -1,0 +1,85 @@
+<section class="community-page">
+  <div class="community-shell">
+    <div class="community-toolbar">
+      <div>
+        <h2>{{ 'community.shareJourney' | translate }}</h2>
+        <p class="community-subtitle">Share route advice, destination tips, and journey stories with verified travelers.</p>
+      </div>
+
+      <label class="community-filter">
+        <span>Topic</span>
+        <select [(ngModel)]="selectedTopic" (ngModelChange)="onTopicChange($event)">
+          <option *ngFor="let topic of topics" [ngValue]="topic.value">{{ topic.label }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="community-message" *ngIf="communityMessage">{{ communityMessage }}</div>
+
+    <div class="community-composer">
+      <input
+        [(ngModel)]="newPostTitle"
+        placeholder="Post title"
+        class="community-input" />
+
+      <input
+        [(ngModel)]="newPostImageUrl"
+        placeholder="Photo URL (optional)"
+        class="community-input" />
+
+      <input
+        type="file"
+        accept="image/*"
+        class="community-input"
+        (change)="onImageSelected($event)" />
+
+      <textarea
+        [(ngModel)]="newPost"
+        [placeholder]="'community.storyPlaceholder' | translate"
+        class="community-textarea"></textarea>
+
+      <div class="community-composer-footer">
+        <span class="community-verified-tag" *ngIf="isVerifiedUser">Verified users can post</span>
+        <button (click)="addPost()" class="community-primary-button">
+          {{ 'community.post' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngFor="let post of posts" class="community-card">
+      <div class="community-card__header">
+        <img src="https://i.pravatar.cc/40" class="community-avatar" alt="Avatar">
+        <div>
+          <p class="community-author">{{ post.userName }}</p>
+          <p class="community-meta">{{ post.topic }} · {{ 'community.justNow' | translate }}</p>
+        </div>
+        <span class="community-popular" *ngIf="post.isPopular">{{ 'community.popularPost' | translate }}</span>
+      </div>
+
+      <h3 class="community-title" *ngIf="post.title">{{ post.title }}</h3>
+      <p class="community-content">{{ post.content }}</p>
+      <img *ngIf="post.imageUrl" [src]="post.imageUrl" [alt]="post.title || 'Travel post image'" class="community-image">
+
+      <div class="community-actions">
+        <button (click)="likePost(post)">{{ post.likes || 0 }} Likes</button>
+        <button (click)="sharePost(post)">Share</button>
+        <button (click)="reportPost(post)">{{ 'community.report' | translate }}</button>
+      </div>
+
+      <div class="community-comments">
+        <input
+          [(ngModel)]="post.newComment"
+          [placeholder]="'community.commentPlaceholder' | translate"
+          class="community-input">
+
+        <button (click)="addComment(post)" class="community-secondary-button">
+          {{ 'community.addComment' | translate }}
+        </button>
+
+        <div class="community-comment" *ngFor="let comment of post.comments">
+          <strong>{{ comment.userName || 'Traveler' }}:</strong> {{ comment.text || comment }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
