@@ -86,8 +86,8 @@ export class ProfilePageComponent implements OnInit {
       email: authUser.email,
       name: typeof authUser.name === 'string' ? authUser.name : '',
       token: typeof authUser.token === 'string' ? authUser.token : undefined,
-      phone: typeof authUser.phone === 'string' ? authUser.phone : '',
-      gender: typeof authUser.gender === 'string' ? authUser.gender : ''
+      phone: typeof authUser['phone'] === 'string' ? authUser['phone'] : '',
+      gender: typeof authUser['gender'] === 'string' ? authUser['gender'] : ''
     };
   }
 
